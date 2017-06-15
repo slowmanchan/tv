@@ -7,11 +7,14 @@ class Navbar extends Component {
   render() {
     return(
       <div>
+        <Link to='/show/2'>test</Link>
         <Link to='/'>Home</Link>
         ||
         <Link to='/login'>Login</Link>
         ||
         <Link to='/signup'>Signup</Link>
+        ||
+        {this.props.currentUser}
       </div>
     )
   }

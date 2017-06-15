@@ -4,6 +4,8 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var User = require('./models/user');
+var Show = require('./models/show');
+
 var app = express();
 mongoose.Promise = global.Promise;
 mongoose.set('debug', true);
@@ -28,9 +30,40 @@ app.post('/signup', function(req, res, next) {
   })
 
   user.save(function(err) {
-    if (err) return handleError(err);
+    console.log(err);
   })
   res.send(req.body);
+})
+
+app.post('/login', function(req, res, next) {
+  User.find({ username: req.body.username }).then(function(user) {
+    res.json(user)
+  })
+  .catch(function(error) {
+    console.log(error)
+  })
+})
+
+app.post('/show', function(req, res, next) {
+  var newShow = new Show(req.body);
+  newShow.user = req.body.user_id;
+  newShow.save().then(function(show) {
+    User.findById(req.body.user_id).then(function(user) {
+      user.shows.push(newShow)
+      user.save().then(function(user) {
+        res.json(user);
+      })
+    })
+  })
+})
+
+app.get('/users/:user_id/shows', function(req, res, next) {
+  User.findById(req.body.owner_id)
+    .populate('shows')
+    .exec()
+    .then(function(user) {
+      res.json(user)
+    })
 })
 
 app.get('/test', function(req, res, next) {

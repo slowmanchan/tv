@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Navbar from './Navbar';
+import { Router, browserHistory } from 'react-router';
 
 class Signup extends Component {
   constructor(props) {
@@ -42,6 +43,7 @@ class Signup extends Component {
     })
     .then(function(data) {
       console.log('Success: ', data);
+      browserHistory.push('/login');
     })
     .catch(function(error) {
       console.log('Request failed: ', error);
